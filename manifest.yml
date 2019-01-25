@@ -1,0 +1,4 @@
+---
+applications:
+- name: forwardjs-openwhisk
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack

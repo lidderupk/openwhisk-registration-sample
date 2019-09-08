@@ -14,7 +14,17 @@ app.get('/', function(request, response) {
 // submit the user to cloudant to kick off the trigger
 app.post('/submit_user', function(request, response) {
   var doc = {};
-  var cloudant = new Cloudant({ url: process.env.URL});
+  //var cloudant = new Cloudant({ url: process.env.URL});
+  
+  var cloudant = new Cloudant({
+  account: process.env.account,
+  plugins: {
+    iamauth: {
+      iamApiKey: process.env.secret
+    }
+  }
+});
+  
   
   if(request.body.user_email) {
     doc.user_email = request.body.user_email;
@@ -27,7 +37,8 @@ app.post('/submit_user', function(request, response) {
   //insert this new document
   const dbName = process.env.dbname;
   const testdb = cloudant.db.use(dbName);
-  testdb.insert(doc, function(){
+  testdb.insert(doc, function(data){
+    console.log(data);
     console.log('doc inserted');
   });
   
